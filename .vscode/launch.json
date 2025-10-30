@@ -1,0 +1,73 @@
+{
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "sp-express-sp",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "runtimeArgs": [
+        "-r", "./node_modules/ts-node/register/transpile-only"
+      ],
+      "args": [
+        "${workspaceFolder}/src/EntrypointSp.ts"
+      ],
+      "envFile": "${workspaceFolder}/.env"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "sp-express-app",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "runtimeArgs": [
+        "-r", "./node_modules/ts-node/register/transpile-only"
+      ],
+      "args": [
+        "${workspaceFolder}/src/EntrypointApp.ts"
+      ],
+      "envFile": "${workspaceFolder}/.env"
+    },
+    {
+      "type": "node",
+      "request": "attach",
+      "name": "attach-to-docker-sp-process",
+      "port": 9229,
+      "address": "localhost",
+      "localRoot": "${workspaceFolder}",
+      "remoteRoot": "/sp",
+      "skipFiles": [
+        "<node_internals>/**"
+      ]
+    },
+    {
+      "type": "node",
+      "request": "attach",
+      "name": "attach-to-docker-app-process",
+      "port": 9228,
+      "address": "localhost",
+      "localRoot": "${workspaceFolder}",
+      "remoteRoot": "/sp",
+      "skipFiles": [
+        "<node_internals>/**"
+      ]
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Jest Entrypoint",
+      "program": "${workspaceFolder}/node_modules/jest/bin/jest.js",
+      "args": [ 
+        "--runTestsByPath", 
+        "--silent",
+        "-i", 
+        "${workspaceFolder}/src/test/EntrypointSp.test.ts" 
+      ],
+      "runtimeArgs": [ "--experimental-vm-modules" ],
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen"
+    }
+  ]
+}
