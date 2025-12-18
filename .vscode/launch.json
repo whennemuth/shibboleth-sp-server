@@ -7,8 +7,9 @@
       "skipFiles": [
         "<node_internals>/**"
       ],
+      "runtimeExecutable": "npx",
       "runtimeArgs": [
-        "-r", "./node_modules/ts-node/register/transpile-only"
+        "tsx"
       ],
       "args": [
         "${workspaceFolder}/src/EntrypointSp.ts"
@@ -22,8 +23,9 @@
       "skipFiles": [
         "<node_internals>/**"
       ],
+      "runtimeExecutable": "npx",
       "runtimeArgs": [
-        "-r", "./node_modules/ts-node/register/transpile-only"
+        "tsx"
       ],
       "args": [
         "${workspaceFolder}/src/EntrypointApp.ts"
