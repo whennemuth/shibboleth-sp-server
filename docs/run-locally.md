@@ -18,9 +18,10 @@
   #### Steps to run
 
   1. **Install**
-     From the root directory, install dependencies for the main module and all nested modules:
+     Requires Node.js 22+. The shibboleth-sp library tarball must exist first, since it is a dev dependency of this project:
 
      ```
+     (cd ../shibboleth-sp && npm install && npm run pack)
      npm install
      ```
 
@@ -55,15 +56,15 @@
      If you want to simply run the dockerized app, skip the remaining steps below and simply run:
   
      ```
-     docker compose -f docker-compose-slim.yml up -d
+     npm run deploy-slim
      ```
   
-     This will produce two "slim" docker files with only the tree-shaken js index files.
+     This builds the project and then produces two "slim" docker images containing only the self-contained js bundles from `dist/standalone` *(no node_modules)*.
      Visit `https://localhost:5000.` in your browser.
      If instead you want step debugging, proceed as follows instead...
   
   3. **Build the project:**
-     This is necessary to produce a dist folder that can be mapped to the corresponding containerized directory structure.
+     The docker images do not build anything themselves; they copy in the `dist/standalone` bundles built on your machine. Rebuild whenever the source changes.
   
      ```
      npm run build
@@ -77,17 +78,19 @@
      npm run up
      ```
 
+     *NOTE: `npm run up` reuses existing images. To pick up a new build, use `npm run deploy`, which builds the project and recreates the images and containers.*
+
   5. **Run "attach-to-docker-sp-process":**
      This vscode launch configuration should to attach to the container A *(the shibboleth-sp-server container)*. 
      This launch config maps the internal container directory `/sp` to the local `${workspace}` directory.
-     As as long as these two directories mirror each other, including the dist folders, source mapping should work.
+     The bundles in `dist/standalone` carry source maps that point back to the local `src` directory, so source mapping should work as long as the bundles in the container match your local build.
   
   6. **Browser:**
      Navigate to `https://localhost:5000.`
      You should see content output by container B, proxied by container A
   
   7. **Step debug:**
-     While "attach-to-docker-sp-process" is running, you should be able to place a breakpoint into any code in scope (ie: src/HandlerSp.ts), refresh the browser, and observe excecution pause on the breakpoint.
+     While "attach-to-docker-sp-process" is running, you should be able to place a breakpoint into any code in scope (ie: src/EntrypointSp.ts), refresh the browser, and observe excecution pause on the breakpoint.
   
   **SIMPLE LAUNCH CONFIGS:**
   You can also step debug by running either of two vscode launch configurations:

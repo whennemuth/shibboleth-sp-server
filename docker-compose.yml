@@ -1,11 +1,9 @@
-version: '3.9'
-
 services:
 
   # Shibboleth sp in one container targeting "app" in separate container over network bridge
   sp:
     image: ${DOCKER_REGISTRY}/bu-shibboleth-sp-debug 
-    command: [ "dist/esm/EntrypointSp.js" ]
+    command: [ "dist/standalone/EntrypointSp.js" ]
     container_name: sp 
     build:
       context: ./
@@ -34,7 +32,7 @@ services:
 
   app: # Use this name for "DOCKER_APP_HOST" environment variables
     image: ${DOCKER_REGISTRY}/bu-shibboleth-app-debug 
-    command: [ "dist/esm/EntrypointApp.js" ]
+    command: [ "dist/standalone/EntrypointApp.js" ]
     container_name: app 
     build:
       context: ./

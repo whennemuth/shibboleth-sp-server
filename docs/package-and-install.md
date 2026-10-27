@@ -6,28 +6,37 @@ Here shibboleth-sp-server is packaged up, and then we proceed from the perspecti
 1. Download this repo, package shibboleth-sp-server as a tarball to a new project folder *(shibboleth-sp-client)*, and open that new project in vscode:
 
    ```
+   # Prerequisite (Node.js 22+): the shibboleth-sp library tarball must exist, since it is a dev dependency of this project.
+   (cd ../shibboleth-sp && npm install && npm run pack)
+
    # Be in the root directory of this project:
-   
+   npm install
    mkdir ../shibboleth-sp-client
-   npm run build && npm pack --pack-destination ../shibboleth-sp-client
+   npm pack --pack-destination ../shibboleth-sp-client
    code ../shibboleth-sp-client
    ```
+
+   `npm pack` runs the build automatically *(via the `prepack` script)*, producing:
+
+   - `dist/cjs/index.js` - CommonJS build, used by `require()`
+   - `dist/esm/index.mjs` - ES module build, used by `import`
+   - `dist/types/index.d.ts` / `index.d.mts` - type declarations
+
+   The shibboleth-sp library is bundled into these files, so consumers do not need its tarball.
 
 2. Open a bash prompt in the root of the new vscode project and install and configure required dependencies
 
    ```
-   # Install the typescript and its compiler, tsc
-   npm install -g typescript
-   npm install ts-node
+   # Install typescript and tsx (runs typescript files directly, no compile step)
+   npm install -D typescript tsx @types/node
    
-   # Configure typescript compiler:
+   # Configure typescript (used for type checking and editor support only):
    echo '{
      "compilerOptions": {
-       "target": "es2016",
-       "module": "Node16",
-       "moduleResolution": "node16",
-       "esModuleInterop": true,
-       "forceConsistentCasingInFileNames": true,
+       "target": "ES2023",
+       "module": "nodenext",
+       "types": [ "node" ],
+       "noEmit": true,
        "strict": true,
        "skipLibCheck": true
      }
@@ -37,9 +46,11 @@ Here shibboleth-sp-server is packaged up, and then we proceed from the perspecti
    npm install shibboleth-sp-server-1.0.0.tgz
    ```
 
+   *NOTE: If you re-pack the tarball without changing its version number, npm may keep installing the old contents. Run `npm uninstall shibboleth-sp-server` before installing it again (or bump the version in shibboleth-sp-server's package.json).*
+
 3. Create some code to import and use the package
 
-   - **esm:** *(recommended)*
+   - **typescript:** *(recommended)*
 
      1. Create a new typescript file `./Main.ts`, with the following content:
 
@@ -62,7 +73,7 @@ Here shibboleth-sp-server is packaged up, and then we proceed from the perspecti
                 "<node_internals>/**"
               ],
               "runtimeArgs": [
-                "-r", "./node_modules/ts-node/register/transpile-only"
+                "--import", "tsx"
               ],
               "args": [
                 "${workspaceFolder}/Main.ts",

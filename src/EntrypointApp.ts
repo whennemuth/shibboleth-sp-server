@@ -56,7 +56,7 @@ export const startExpressServer = () => {
   }
     
   // Handle all http requests
-  app.all('/*', async (req:Request, res:Response) => {
+  app.all('/{*splat}', async (req:Request, res:Response) => {
     try {
       console.log(`Incoming request: ${JSON.stringify(req, Object.getOwnPropertyNames(req), 2)}`);     
       const request:IRequest = buildRequest(req);

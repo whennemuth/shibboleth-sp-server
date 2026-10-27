@@ -55,7 +55,7 @@ export const startExpressServer = (handler:any) => {
   const server = createServer({key: privateKeyPEM, cert: certificatePEM }, app) as Server;
 
   // Handle all http requests
-  app.all('/*', async (req:Request, res:Response) => {
+  app.all('/{*splat}', async (req:Request, res:Response) => {
 
     try {
       if(/favicon/i.test(req.url)) {

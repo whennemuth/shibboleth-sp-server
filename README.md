@@ -14,9 +14,29 @@ See [Running Locally](./docs/run-locally.md)
 
 ## Installation
 
+Requires Node.js 22+.
+
 ```bash
 npm install shibboleth-sp-server
 ```
+
+The package provides both a CommonJS build (for `require`) and an ES module build (for `import`), with the core shibboleth-sp library bundled in. Its `handler` is re-exported, so consumers need only this package:
+
+```typescript
+import { handler, startExpressServer } from 'shibboleth-sp-server';
+```
+
+## Building
+
+The core shibboleth-sp library is a dev dependency installed from its local tarball, so pack that first:
+
+```bash
+(cd ../shibboleth-sp && npm install && npm run pack)
+npm install
+npm run build
+```
+
+This produces the library builds in `dist/cjs`, `dist/esm` and `dist/types`, plus self-contained `dist/standalone/EntrypointSp.js` and `EntrypointApp.js` bundles that the docker images run.
 
 ## Usage
 
